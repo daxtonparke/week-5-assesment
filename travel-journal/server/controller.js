@@ -12,8 +12,24 @@ const sequelize = new Sequelize (CONNECTION_STRING, {
   })
 
 module.exports = {
+    deleteCity: (req,res) =>{
+        const {id} = req.params
+        sequelize.query(`
+        DELETE 
+        FROM cities
+        WHERE city_id = '${id}';
+        `)
+        .then(dbRes => res.status(200).send(dbRes[0]))
+        .catch(err=>console.log(err))
+
+    },
     getCities: (req,res) =>{
-sequelize.query(``)
+sequelize.query(`SELECT ci.city_id, ci.name city, ci.rating, ci.country_id, co.country_id, co.name country
+FROM cities ci
+JOIN countries co
+ON ci.country_id = co.country_id ;`)
+.then(dbRes => res.status(200).send(dbRes[0]))
+.catch(err=>console.log(err))
     },
     createCity: (req,res) =>{
         const {name,rating,countryId} = req.body
